@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import SearchBar from "./components/Searchbar";
 import { supabase } from "@/lib/supabaseClient";
 import GlossaryTable from "@/components/GlossaryTable";
-import { testAPI } from "@/lib/sample";
 
 function App() {
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -29,7 +28,7 @@ function App() {
   }
 
   async function logIn() {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: import.meta.env.VITE_DATABASE_USER_EMAIL,
       password: import.meta.env.VITE_DATABASE_USER_PW,
     });
