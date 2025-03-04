@@ -2,7 +2,7 @@ name: Deploy static content to Pages
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
 
   workflow_dispatch:
 
@@ -12,7 +12,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
 
       - name: Set up pnpm
         run: npm install -g pnpm
@@ -43,7 +43,6 @@ jobs:
           echo VITE_DATABASE_KEY=${{ secrets.VITE_DATABASE_KEY }} >> .env
           echo VITE_DATABASE_USER_EMAIL=${{ secrets.VITE_DATABASE_USER_EMAIL }} >> .env
           echo VITE_DATABASE_USER_PW=${{ secrets.VITE_DATABASE_USER_PW }} >> .env
-          
 
       - name: Build
         run: pnpm run build
@@ -54,7 +53,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: "./dist"
 
       - name: Deploy to GitHub Pages
         id: deployment
