@@ -1,0 +1,59 @@
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches: ['main']
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Create env variables
+        run: |
+          touch .env
+          echo VITE_DATABASE_URL=${{ secrets.VITE_DATABASE_URL }} >> .env
+          echo VITE_DATABASE_KEY=${{ secrets.VITE_DATABASE_KEY }} >> .env
+          echo VITE_DATABASE_USER_EMAIL=${{ secrets.VITE_DATABASE_USER_EMAIL }} >> .env
+          echo VITE_DATABASE_USER_PW=${{ secrets.VITE_DATABASE_USER_PW }} >> .env
+          
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
