@@ -14,6 +14,7 @@ export default function SearchBar({ keyword, setKeyword }: Props) {
       placeholder="Search keyword..."
       value={keyword}
       onChange={(e) => setKeyword(e.currentTarget.value)}
+      autoFocus
     />
   );
 }
